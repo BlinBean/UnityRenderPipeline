@@ -9,7 +9,7 @@ public class SkyboxDraw : MonoBehaviour
     private static int _Corner = Shader.PropertyToID("_Corner");
     public Material skyboxMaterial;
 
-    public void DrawSkybox(Camera cam)
+    public void DrawSkybox(Camera cam, RenderBuffer cameraTarget, RenderBuffer depth)
     {
         //获得Far4个视口坐标
         corners[0] = cam.ViewportToScreenPoint(new Vector3(0, 0, cam.farClipPlane));
@@ -21,6 +21,7 @@ public class SkyboxDraw : MonoBehaviour
         skyboxMaterial.SetVectorArray(_Corner, corners);
         skyboxMaterial.SetPass(0);
 
+        Graphics.SetRenderTarget(cameraTarget, depth);
         Graphics.DrawMeshNow(fullScreenMesh, Matrix4x4.identity);
     }
 
@@ -34,10 +35,10 @@ public class SkyboxDraw : MonoBehaviour
             m_mesh = new Mesh();
             //NDC,注意顺序
             m_mesh.vertices = new Vector3[] {
-                new Vector4(-1,-1,0, 1),
-                new Vector4(-1,1,0, 1),
-                new Vector4(1,1,0, 1),
-                new Vector4(1,-1,0, 1)
+                new Vector4(-1,-1,0),
+                new Vector4(-1,1,0),
+                new Vector4(1,1,0),
+                new Vector4(1,-1,0)
             };
             //DX
             m_mesh.uv = new Vector2[] {
